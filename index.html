@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Sistema Servizi</title>
+
+  <link rel="icon" href="./favicon.png">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+      <img src="./favicon.png" class="logo-side">
+
+      <div>
+        <h1>Sistema di Registrazione Servizi e Compenso</h1>
+        <p class="subtitle">
+          Giurisprudenza di Los Santos, EmeralsRp<br>
+          836 Picture Perfect Drive, Emerals, CA 91364
+        </p>
+      </div>
+
+      <img src="./favicon.png" class="logo-side">
+    </div>
+
+    <!-- CARD -->
+    <div class="card">
+
+      <select id="servizio">
+        <option value="">-- Seleziona Servizio --</option>
+
+        <optgroup label="ASSISTENTI LEGALI">
+          <option value="denuncia">Denuncia</option>
+          <option value="doc_tirocinante">Documento Lavorativo Tirocinante</option>
+          <option value="doc_dipendente">Documento Lavorativo Dipendente</option>
+          <option value="doc_direttore">Documento Lavorativo Direttore</option>
+          <option value="vendita_ambulante">Documento di Vendita Ambulante</option>
+          <option value="vetri">Permesso Vetri Oscurati</option>
+          <option value="precedenti">Info Precedenti Penali</option>
+          <option value="pulizia">Pulizia Fedina</option>
+          <option value="matrimonio">Certificato di Matrimonio</option>
+          <option value="parentela">Certificato di Parentela</option>
+          <option value="divorzio">Certificato di Divorzio</option>
+        </optgroup>
+
+        <optgroup label="AVVOCATO">
+          <option value="processo_avvocato">Processo - Avvocato</option>
+          <option value="assistenza">Assistenza alle Celle / Consulenza Legale</option>
+        </optgroup>
+
+        <optgroup label="PROCURA">
+          <option value="processo_procura">Processo - Procuratore</option>
+          <option value="maschera_bi">Permesso Maschera Parziale Bisettimanale</option>
+          <option value="maschera_mese">Permesso Maschera Parziale Mensile</option>
+        </optgroup>
+
+        <optgroup label="CORTE">
+          <option value="processo_corte">Processo - Giudice</option>
+          <option value="processo_suprema">Processo - Giudice Supremo</option>
+        </optgroup>
+      </select>
+
+      <!-- BOX PROCESSO -->
+      <div id="processoBox" class="box" style="display:none;">
+        <label>Processo in contumacia?</label>
+
+        <select id="contumacia">
+          <option value="">Seleziona</option>
+          <option value="si">Sì</option>
+          <option value="no">No</option>
+        </select>
+
+        <div id="multaBox" style="display:none;">
+          <input type="number" id="multa" placeholder="Inserisci multa">
+        </div>
+      </div>
+
+      <!-- BOTTONI -->
+      <div class="buttons">
+        <button onclick="genera()">Genera</button>
+        <button onclick="copia()">Copia</button>
+        <button onclick="ritira()">Ritira</button>
+      </div>
+
+      <pre id="output"></pre>
+
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p><b>Sviluppato dall'attuale Segretario di Giustizia Detroit</b></p>
+    <p>Discord: dossenix | Email: alexanderferrari.emeralsrp@gmail.com</p>
+  </footer>
+
+  <!-- OVERLAY RITIRO -->
+  <div id="ritiroBox" class="overlay">
+    <div class="overlay-content">
+      <h3>Ritirare stipendio?</h3>
+      <button onclick="confermaRitiro()">Conferma</button>
+      <button onclick="chiudiRitiro()">Annulla</button>
+    </div>
+  </div>
+
+  <script src="./script.js"></script>
+
+</body>
+</html>
