@@ -4,11 +4,17 @@
   <meta charset="UTF-8">
   <title>Sistema Servizi</title>
 
+  <!-- ICONA TAB -->
   <link rel="icon" href="./favicon.png">
+
+  <!-- CSS -->
   <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 
+<div class="layout">
+
+  <!-- SINISTRA (TOOL) -->
   <div class="container">
 
     <!-- HEADER -->
@@ -29,7 +35,9 @@
     <!-- CARD -->
     <div class="card">
 
+      <!-- MENU -->
       <select id="servizio">
+
         <option value="">-- Seleziona Servizio --</option>
 
         <optgroup label="ASSISTENTI LEGALI">
@@ -40,8 +48,8 @@
           <option value="vendita_ambulante">Documento di Vendita Ambulante</option>
           <option value="vetri">Permesso Vetri Oscurati</option>
           <option value="precedenti">Info Precedenti Penali</option>
-          <option value="richiesta_pulizia">Richiesta Pulizia Fedina</option>
           <option value="pulizia">Pulizia Fedina</option>
+          <option value="richiesta_pulizia">Richiesta Pulizia Fedina</option>
           <option value="matrimonio">Certificato di Matrimonio</option>
           <option value="parentela">Certificato di Parentela</option>
           <option value="divorzio">Certificato di Divorzio</option>
@@ -62,6 +70,7 @@
           <option value="processo_corte">Processo - Giudice</option>
           <option value="processo_suprema">Processo - Giudice Supremo</option>
         </optgroup>
+
       </select>
 
       <!-- BOX PROCESSO -->
@@ -87,28 +96,37 @@
         <button onclick="ritira()">Ritira</button>
       </div>
 
+      <!-- OUTPUT -->
       <pre id="output"></pre>
 
     </div>
-
   </div>
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <p><b>Sviluppato dall'attuale Segretario di Giustizia Detroit</b></p>
-    <p>Discord: dossenix | Email: alexanderferrari.emeralsrp@gmail.com</p>
-  </footer>
-
-  <!-- OVERLAY RITIRO -->
-  <div id="ritiroBox" class="overlay">
-    <div class="overlay-content">
-      <h3>Ritirare stipendio?</h3>
-      <button onclick="confermaRitiro()">Conferma</button>
-      <button onclick="chiudiRitiro()">Annulla</button>
-    </div>
+  <!-- DESTRA (ARCHIVIO) -->
+  <div class="archivio">
+    <h3>Archivio</h3>
+    <div id="listaArchivio"></div>
   </div>
 
-  <script src="./script.js"></script>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p><b>Sviluppato dall'attuale Segretario di Giustizia Detroit</b></p>
+  <p>Discord: dossenix | Email: alexanderferrari.emeralsrp@gmail.com</p>
+</footer>
+
+<!-- OVERLAY RITIRO -->
+<div id="ritiroBox" class="overlay">
+  <div class="overlay-content">
+    <h3>Ritirare stipendio?</h3>
+    <button onclick="confermaRitiro()">Conferma</button>
+    <button onclick="chiudiRitiro()">Annulla</button>
+  </div>
+</div>
+
+<!-- JS -->
+<script src="./script.js"></script>
 
 </body>
 </html>
