@@ -1,22 +1,23 @@
+
+// ===== STORAGE BASE =====
 let compensoTotale = Number(localStorage.getItem("compenso")) || 0;
 let fattureTotali = Number(localStorage.getItem("fatture")) || 0;
 let processiTotali = Number(localStorage.getItem("processi")) || 0;
 
-// ANNULLA
-let ultimoCompenso = 0;
-let ultimoProcesso = false;
+// ===== ARCHIVIO + STORICO =====
+let archivio = JSON.parse(localStorage.getItem("archivio")) || [];
+let storico = [];
 
-// FORMATTA SOLDI
+// ===== UTILS =====
 function formatMoney(num) {
   return num.toLocaleString("it-IT") + "$";
 }
 
-// DATA ITALIA
 function getData() {
   return new Date().toLocaleString("it-IT", { timeZone: "Europe/Rome" });
 }
 
-// MOSTRA BOX PROCESSO
+// ===== UI PROCESSI =====
 document.getElementById("servizio").addEventListener("change", function () {
   let processi = [
     "processo_avvocato",
@@ -29,13 +30,12 @@ document.getElementById("servizio").addEventListener("change", function () {
     processi.includes(this.value) ? "block" : "none";
 });
 
-// MOSTRA INPUT MULTA
 document.getElementById("contumacia").addEventListener("change", function () {
   document.getElementById("multaBox").style.display =
     this.value === "no" ? "block" : "none";
 });
 
-// GENERA
+// ===== GENERA =====
 function genera() {
   let servizio = document.getElementById("servizio").value;
   if (!servizio) return alert("Seleziona un servizio");
@@ -124,7 +124,7 @@ function genera() {
       compenso = prezzo * 0.75;
       break;
 
-    // PROCESSI
+    // ===== PROCESSI =====
     case "processo_avvocato":
       gestioneProcesso("Processo - Avvocato", 10000, 0.10);
       return;
@@ -157,15 +157,11 @@ function genera() {
   aggiorna(nome, prezzo, compenso, false);
 }
 
-// PROCESSI
+// ===== PROCESSO =====
 function gestioneProcesso(nome, prezzoBase, percentuale) {
-
   let contumacia = document.getElementById("contumacia").value;
 
-  if (!contumacia) {
-    alert("Seleziona contumacia");
-    return;
-  }
+  if (!contumacia) return alert("Seleziona contumacia");
 
   let prezzo, compenso;
 
@@ -174,11 +170,7 @@ function gestioneProcesso(nome, prezzoBase, percentuale) {
     compenso = prezzoBase;
   } else {
     let multa = Number(document.getElementById("multa").value);
-
-    if (!multa) {
-      alert("Inserisci multa");
-      return;
-    }
+    if (!multa) return alert("Inserisci multa");
 
     prezzo = multa;
     compenso = multa * percentuale;
@@ -187,31 +179,85 @@ function gestioneProcesso(nome, prezzoBase, percentuale) {
   aggiorna(nome, prezzo, compenso, true);
 }
 
-// AGGIORNA
+// ===== AGGIORNA =====
 function aggiorna(nome, prezzo, compenso, isProcesso) {
 
-  ultimoCompenso = compenso;
-  ultimoProcesso = isProcesso;
+  // salva stato precedente
+  storico.push({
+    compensoTotale,
+    fattureTotali,
+    processiTotali
+  });
 
+  // aggiorna valori
   compensoTotale += compenso;
   fattureTotali++;
-
   if (isProcesso) processiTotali++;
 
+  // salva
   localStorage.setItem("compenso", compensoTotale);
   localStorage.setItem("fatture", fattureTotali);
   localStorage.setItem("processi", processiTotali);
 
-  document.getElementById("output").textContent =
+  let messaggio =
 `Servizio: ${nome}
 Data: ${getData()}
 Prezzo: ${formatMoney(prezzo)}
 Compenso Totale: ${formatMoney(compensoTotale)}
 Fatture Totali: ${fattureTotali}
 Processi: ${processiTotali}`;
+
+  document.getElementById("output").textContent = messaggio;
+
+  // aggiorna archivio
+  archivio.unshift(messaggio);
+  if (archivio.length > 10) archivio.pop();
+
+  localStorage.setItem("archivio", JSON.stringify(archivio));
+
+  aggiornaArchivio();
 }
 
-// COPIA
+// ===== ARCHIVIO =====
+function aggiornaArchivio() {
+  let container = document.getElementById("listaArchivio");
+  container.innerHTML = "";
+
+  archivio.forEach(item => {
+    let div = document.createElement("div");
+    div.className = "archivio-item";
+    div.textContent = item;
+    container.appendChild(div);
+  });
+}
+
+// ===== ANNULLA =====
+function annulla() {
+  if (storico.length === 0) {
+    alert("Niente da annullare");
+    return;
+  }
+
+  let ultimo = storico.pop();
+
+  compensoTotale = ultimo.compensoTotale;
+  fattureTotali = ultimo.fattureTotali;
+  processiTotali = ultimo.processiTotali;
+
+  localStorage.setItem("compenso", compensoTotale);
+  localStorage.setItem("fatture", fattureTotali);
+  localStorage.setItem("processi", processiTotali);
+
+  archivio.shift();
+  localStorage.setItem("archivio", JSON.stringify(archivio));
+
+  document.getElementById("output").textContent =
+    archivio[0] || "Operazione annullata.";
+
+  aggiornaArchivio();
+}
+
+// ===== COPIA =====
 function copia() {
   let testo = document.getElementById("output").textContent;
   if (!testo) return alert("Niente da copiare!");
@@ -220,26 +266,7 @@ function copia() {
   alert("Copiato!");
 }
 
-// ANNULLA
-function annulla() {
-  if (fattureTotali === 0) {
-    alert("Niente da annullare");
-    return;
-  }
-
-  compensoTotale -= ultimoCompenso;
-  fattureTotali--;
-
-  if (ultimoProcesso) processiTotali--;
-
-  localStorage.setItem("compenso", compensoTotale);
-  localStorage.setItem("fatture", fattureTotali);
-  localStorage.setItem("processi", processiTotali);
-
-  document.getElementById("output").textContent = "Ultima operazione annullata.";
-}
-
-// RITIRO
+// ===== RITIRO =====
 function ritira() {
   document.getElementById("ritiroBox").style.display = "flex";
 }
@@ -251,10 +278,18 @@ function confermaRitiro() {
 
   localStorage.clear();
 
+  archivio = [];
+  storico = [];
+
   document.getElementById("output").textContent = "Stipendio ritirato.";
+  aggiornaArchivio();
+
   chiudiRitiro();
 }
 
 function chiudiRitiro() {
   document.getElementById("ritiroBox").style.display = "none";
 }
+
+// ===== INIT =====
+aggiornaArchivio();
